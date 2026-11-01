@@ -1,0 +1,253 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Assessment | SportIQ</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .result-form {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .result-form h2 {
+            margin-bottom: 10px;
+        }
+
+        .result-form p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .result-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+
+        .result-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .result-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result-message {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="dashboard-navbar">
+    <a href="index.html" class="dashboard-logo">
+        Sport<span>IQ</span>
+    </a>
+
+    <div class="dashboard-user">
+        <a href="athlete-dashboard.html">Dashboard</a>
+        <a href="sports.html">Sports</a>
+    </div>
+</header>
+
+<main class="assessment-container">
+
+    <section class="assessment-heading">
+        <p class="tagline">PERFORMANCE ASSESSMENT</p>
+        <h1>Test Your <span>Abilities.</span></h1>
+        <p id="sport-name">Explore the available performance tests.</p>
+    </section>
+
+    <section class="general-instructions">
+        <h2>Before You Begin</h2>
+        <ul>
+            <li>Choose a safe and open area.</li>
+            <li>Wear comfortable sports clothing and footwear.</li>
+            <li>Warm up before starting physical activity.</li>
+            <li>Enter your assessment scores below.</li>
+        </ul>
+    </section>
+
+    <section class="test-section">
+        <h2>Available Assessments</h2>
+
+        <div class="test-grid">
+
+            <div class="test-card">
+                <div class="test-number">01</div>
+                <h3>Speed Test</h3>
+                <p>Evaluate your running speed and acceleration.</p>
+                <span class="test-category">Speed</span>
+            </div>
+
+            <div class="test-card">
+                <div class="test-number">02</div>
+                <h3>Agility Test</h3>
+                <p>Evaluate your ability to change direction.</p>
+                <span class="test-category">Agility</span>
+            </div>
+
+            <div class="test-card">
+                <div class="test-number">03</div>
+                <h3>Endurance Test</h3>
+                <p>Evaluate your ability to maintain activity.</p>
+                <span class="test-category">Endurance</span>
+            </div>
+
+            <div class="test-card">
+                <div class="test-number">04</div>
+                <h3>Coordination Test</h3>
+                <p>Evaluate your movement and body coordination.</p>
+                <span class="test-category">Coordination</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Assessment Result Form -->
+    <section class="result-form">
+
+        <h2>Submit Your Results</h2>
+        <p>Enter your scores for all four assessments (0–10).</p>
+
+        <form id="assessmentForm">
+
+            <label for="speed">Speed Score</label>
+            <input type="number" id="speed" min="0" max="10"
+                   step="0.1" required>
+
+            <label for="agility">Agility Score</label>
+            <input type="number" id="agility" min="0" max="10"
+                   step="0.1" required>
+
+            <label for="endurance">Endurance Score</label>
+            <input type="number" id="endurance" min="0" max="10"
+                   step="0.1" required>
+
+            <label for="coordination">Coordination Score</label>
+            <input type="number" id="coordination" min="0" max="10"
+                   step="0.1" required>
+
+            <button type="submit" id="submitBtn">
+                Submit Assessment
+            </button>
+
+            <p id="result-message"></p>
+
+        </form>
+    </section>
+
+    <div class="assessment-back">
+        <a href="sports.html">← Back to Sports</a>
+    </div>
+
+</main>
+
+<footer>
+    <p>© 2026 SportIQ. All rights reserved.</p>
+</footer>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const selectedSport = params.get("sport");
+
+    if (selectedSport) {
+        document.getElementById("sport-name").textContent =
+            "You selected " +
+            selectedSport.charAt(0).toUpperCase() +
+            selectedSport.slice(1) +
+            ". Enter your assessment results below.";
+    }
+
+    const form = document.getElementById("assessmentForm");
+
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const token = localStorage.getItem("token");
+        const message = document.getElementById("result-message");
+        const submitBtn = document.getElementById("submitBtn");
+
+        if (!token) {
+            message.textContent = "Please login first.";
+            return;
+        }
+
+        const results = {
+            speed: Number(document.getElementById("speed").value),
+            agility: Number(document.getElementById("agility").value),
+            endurance: Number(document.getElementById("endurance").value),
+            coordination: Number(document.getElementById("coordination").value)
+        };
+
+        if (Object.values(results).some(
+            value => !Number.isFinite(value) || value < 0 || value > 10
+        )) {
+            message.textContent = "Please enter scores between 0 and 10.";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/assessments/submit",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(results)
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                message.style.color = "green";
+                message.textContent =
+                    "Assessment submitted successfully!";
+                form.reset();
+            } else {
+                message.style.color = "red";
+                message.textContent = data.message;
+            }
+
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent = "Unable to connect to server.";
+            console.error(error);
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Assessment";
+    });
+</script>
+
+</body>
+</html>

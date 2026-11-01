@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Dashboard | SportIQ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="dashboard-navbar">
+        <a href="index.html" class="dashboard-logo">
+            Sport<span>IQ</span>
+        </a>
+
+        <div class="dashboard-user">
+            <span>Welcome, Coach!</span>
+            <a href="login.html">Logout</a>
+        </div>
+    </header>
+
+    <main class="coach-container">
+
+        <!-- Welcome Section -->
+        <section class="coach-welcome">
+            <div>
+                <p class="tagline">COACH DASHBOARD</p>
+                <h1>Welcome Back, <span>Coach!</span></h1>
+                <p>Monitor athletes and review their performance.</p>
+            </div>
+        </section>
+
+        <!-- Overview Cards -->
+        <section class="coach-stats">
+
+            <div class="coach-stat-card">
+                <p>Total Athletes</p>
+                <h2>120</h2>
+                <span>Registered athletes</span>
+            </div>
+
+            <div class="coach-stat-card">
+                <p>Assessments Completed</p>
+                <h2>85</h2>
+                <span>Completed assessments</span>
+            </div>
+
+            <div class="coach-stat-card">
+                <p>Pending Reviews</p>
+                <h2>12</h2>
+                <span>Awaiting review</span>
+            </div>
+
+        </section>
+
+        <!-- Athletes Table -->
+        <section class="athletes-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Athlete Performance</h2>
+                    <p>Review athlete assessment records.</p>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="athletes-table">
+                    <thead>
+                        <tr>
+                            <th>Athlete Name</th>
+                            <th>Sport</th>
+                            <th>Assessment</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>Rahul Patil</td>
+                            <td>Football</td>
+                            <td>Speed Test</td>
+                            <td>88/100</td>
+                            <td><span class="coach-status completed">Completed</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Priya Sharma</td>
+                            <td>Badminton</td>
+                            <td>Agility Test</td>
+                            <td>92/100</td>
+                            <td><span class="coach-status completed">Completed</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Akash More</td>
+                            <td>Cricket</td>
+                            <td>Endurance Test</td>
+                            <td>--</td>
+                            <td><span class="coach-status pending">Pending</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Sneha Joshi</td>
+                            <td>Athletics</td>
+                            <td>Speed Test</td>
+                            <td>79/100</td>
+                            <td><span class="coach-status completed">Completed</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Rohan Kulkarni</td>
+                            <td>Basketball</td>
+                            <td>Coordination Test</td>
+                            <td>--</td>
+                            <td><span class="coach-status pending">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="coach-actions">
+            <h2>Quick Actions</h2>
+
+            <div class="coach-action-grid">
+
+                <div class="coach-action-card">
+                    <h3>View Athletes</h3>
+                    <p>Monitor athlete profiles and sports.</p>
+                </div>
+
+                <div class="coach-action-card">
+                    <h3>Review Results</h3>
+                    <p>Check assessment scores and performance.</p>
+                </div>
+
+                <div class="coach-action-card">
+                    <h3>Track Progress</h3>
+                    <p>Monitor athlete development over time.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 SportIQ. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

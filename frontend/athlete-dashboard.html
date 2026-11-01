@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Dashboard | SportIQ</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-score {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        #history-message {
+            color: #666;
+            margin: 15px 0;
+        }
+
+        .logout-btn {
+            cursor: pointer;
+            background: none;
+            border: none;
+            font: inherit;
+            color: inherit;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="dashboard-navbar">
+    <a href="index.html" class="dashboard-logo">
+        Sport<span>IQ</span>
+    </a>
+
+    <div class="dashboard-user">
+        <span id="nav-name">Welcome, Athlete!</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-container">
+
+    <!-- Welcome -->
+    <section class="dashboard-welcome">
+        <div>
+            <p class="tagline">ATHLETE DASHBOARD</p>
+            <h1>Welcome Back, <span id="welcome-name">Champion!</span></h1>
+            <p>Track your performance and discover your sporting potential.</p>
+        </div>
+
+        <a href="sports.html" class="primary-btn">
+            Start Assessment →
+        </a>
+    </section>
+
+    <!-- Stats -->
+    <section class="dashboard-stats">
+
+        <div class="dashboard-stat-card">
+            <p>Total Assessments</p>
+            <h2 id="total-assessments">0</h2>
+            <span>Assessments completed</span>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <p>Selected Sport</p>
+            <h2 id="selected-sport">Not Selected</h2>
+            <span>Your chosen sport</span>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <p>Average Score</p>
+            <h2 id="average-score">--<span>/10</span></h2>
+            <span>Average of submitted scores</span>
+        </div>
+
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-grid">
+
+        <!-- Profile -->
+        <div class="dashboard-panel profile-panel">
+
+            <h2>My Profile</h2>
+
+            <div class="profile-avatar" id="profile-avatar">A</div>
+
+            <h3 id="profile-name">Loading...</h3>
+            <p class="muted-text">Sports Enthusiast</p>
+
+            <div class="profile-details">
+                <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
+                <p><strong>Sport:</strong> <span id="profile-sport">Not Selected</span></p>
+            </div>
+
+            <a href="sports.html" class="panel-link">View Sports →</a>
+
+        </div>
+
+        <!-- Assessment History -->
+        <div class="dashboard-panel">
+
+            <h2>My Assessments</h2>
+
+            <p class="muted-text">
+                Your previously submitted assessment results.
+            </p>
+
+            <div id="assessment-history">
+                <p id="history-message">Loading your results...</p>
+            </div>
+
+            <a href="sports.html" class="panel-link">
+                Take New Assessment →
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+
+        <h2>Explore SportIQ</h2>
+
+        <div class="quick-link-grid">
+
+            <a href="sports.html" class="quick-link-card">
+                <h3>Choose Your Sport</h3>
+                <p>Explore available sports.</p>
+                <span>Explore →</span>
+            </a>
+
+            <a href="assessment.html" class="quick-link-card">
+                <h3>Take Assessment</h3>
+                <p>Test your sporting abilities.</p>
+                <span>Start →</span>
+            </a>
+
+            <a href="index.html" class="quick-link-card">
+                <h3>About SportIQ</h3>
+                <p>Learn more about our platform.</p>
+                <span>Discover →</span>
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 SportIQ. All rights reserved.</p>
+</footer>
+
+<script>
+
+const API_URL = "http://localhost:5000/api";
+
+async function loadDashboard() {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const headers = {
+        "Authorization": "Bearer " + token
+    };
+
+    try {
+
+        // Get student information
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+
+        document.getElementById("nav-name").textContent =
+            "Welcome, " + (userData.fullName || "Athlete");
+
+        document.getElementById("welcome-name").textContent =
+            userData.fullName || "Champion";
+
+        document.getElementById("profile-name").textContent =
+            userData.fullName || "Athlete";
+
+        document.getElementById("profile-email").textContent =
+            userData.email || "Not available";
+
+        document.getElementById("profile-avatar").textContent =
+            (userData.fullName || "A").charAt(0).toUpperCase();
+
+        // Get previous assessment results
+        const response = await fetch(
+            `${API_URL}/assessments/my-results`,
+            { headers }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Unable to load results");
+        }
+
+        const assessments = data.assessments || [];
+
+        document.getElementById("total-assessments").textContent =
+            assessments.length;
+
+        const sport = assessments.length
+            ? assessments[0].sport
+            : "Not Selected";
+
+        document.getElementById("selected-sport").textContent =
+            sport.charAt(0).toUpperCase() + sport.slice(1);
+
+        document.getElementById("profile-sport").textContent =
+            sport.charAt(0).toUpperCase() + sport.slice(1);
+
+        const history = document.getElementById("assessment-history");
+
+        if (assessments.length === 0) {
+            history.innerHTML =
+                "<p>No assessments submitted yet. Start your first assessment!</p>";
+
+            document.getElementById("average-score").innerHTML =
+                "--<span>/10</span>";
+
+            return;
+        }
+
+        // Calculate average score
+        let total = 0;
+        let count = 0;
+
+        assessments.forEach(item => {
+            total += item.speed + item.agility +
+                     item.endurance + item.coordination;
+            count += 4;
+        });
+
+        const average = (total / count).toFixed(1);
+
+        document.getElementById("average-score").innerHTML =
+            average + "<span>/10</span>";
+
+        // Display assessment history
+        history.innerHTML = "";
+
+        assessments.forEach((item, index) => {
+
+            const date = new Date(item.createdAt).toLocaleDateString("en-IN");
+
+            const card = document.createElement("div");
+            card.className = "assessment-item";
+
+            card.innerHTML = `
+                <div style="width:100%">
+                    <h3>Assessment ${assessments.length - index}</h3>
+                    <p>${date} | ${item.sport}</p>
+
+                    <div class="result-row">
+                        <span>Speed</span>
+                        <span class="result-score">${item.speed}/10</span>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Agility</span>
+                        <span class="result-score">${item.agility}/10</span>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Endurance</span>
+                        <span class="result-score">${item.endurance}/10</span>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Coordination</span>
+                        <span class="result-score">${item.coordination}/10</span>
+                    </div>
+                </div>
+            `;
+
+            history.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("history-message").textContent =
+            error.message;
+
+    }
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

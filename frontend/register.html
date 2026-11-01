@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | SportIQ</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .auth-card input {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            padding: 14px 16px;
+            font-size: 15px;
+        }
+
+        .auth-card form {
+            width: 100%;
+        }
+
+        .auth-card button {
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <a href="index.html" class="auth-logo">
+            Sport<span>IQ</span>
+        </a>
+
+        <div class="auth-card">
+
+            <h1>Create Account</h1>
+
+            <p class="auth-subtitle">
+                Join SportIQ and discover your potential.
+            </p>
+
+            <form id="registerForm">
+
+                <label for="fullName">Full Name</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+                <button type="submit" class="auth-submit">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="login.html">Login</a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+
+</body>
+</html>

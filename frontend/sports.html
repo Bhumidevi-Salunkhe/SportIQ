@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Sport | SportIQ</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="dashboard-navbar">
+
+        <a href="index.html" class="dashboard-logo">
+            Sport<span>IQ</span>
+        </a>
+
+        <div class="dashboard-user">
+            <a href="athlete-dashboard.html">Dashboard</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </div>
+
+    </header>
+
+
+    <main class="sports-container">
+
+        <section class="sports-heading">
+
+            <p class="tagline">EXPLORE YOUR POTENTIAL</p>
+
+            <h1>Choose Your <span>Sport.</span></h1>
+
+            <p>
+                Select your preferred sport to explore its performance assessments.
+            </p>
+
+        </section>
+
+
+        <section class="sports-grid">
+
+            <div class="sport-card">
+                <div class="sport-icon">⚽</div>
+                <h2>Football</h2>
+                <p>Test your speed, agility, endurance and coordination.</p>
+                <button class="select-sport" data-sport="football">
+                    Select Sport →
+                </button>
+            </div>
+
+            <div class="sport-card">
+                <div class="sport-icon">🏏</div>
+                <h2>Cricket</h2>
+                <p>Evaluate your agility, reaction time and movement.</p>
+                <button class="select-sport" data-sport="cricket">
+                    Select Sport →
+                </button>
+            </div>
+
+            <div class="sport-card">
+                <div class="sport-icon">🏀</div>
+                <h2>Basketball</h2>
+                <p>Explore your speed, coordination and agility.</p>
+                <button class="select-sport" data-sport="basketball">
+                    Select Sport →
+                </button>
+            </div>
+
+            <div class="sport-card">
+                <div class="sport-icon">🏃</div>
+                <h2>Athletics</h2>
+                <p>Measure your running speed and endurance.</p>
+                <button class="select-sport" data-sport="athletics">
+                    Select Sport →
+                </button>
+            </div>
+
+            <div class="sport-card">
+                <div class="sport-icon">🏸</div>
+                <h2>Badminton</h2>
+                <p>Assess your reaction time, footwork and agility.</p>
+                <button class="select-sport" data-sport="badminton">
+                    Select Sport →
+                </button>
+            </div>
+
+            <div class="sport-card">
+                <div class="sport-icon">🏐</div>
+                <h2>Volleyball</h2>
+                <p>Evaluate your jumping ability and coordination.</p>
+                <button class="select-sport" data-sport="volleyball">
+                    Select Sport →
+                </button>
+            </div>
+
+        </section>
+
+
+        <div class="sports-back">
+            <a href="athlete-dashboard.html">← Back to Dashboard</a>
+        </div>
+
+    </main>
+
+
+    <footer>
+        <p>© 2026 SportIQ. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+
+        const API_URL = "http://localhost:5000/api/auth";
+
+        // Check whether student is logged in
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("Please login first.");
+            window.location.href = "login.html";
+        }
+
+
+        // Save selected sport
+        const sportButtons = document.querySelectorAll(".select-sport");
+
+        sportButtons.forEach(button => {
+
+            button.addEventListener("click", async () => {
+
+                const selectedSport = button.dataset.sport;
+
+                try {
+
+                    button.disabled = true;
+                    button.textContent = "Saving...";
+
+                    const response = await fetch(`${API_URL}/select-sport`, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+                            sport: selectedSport
+                        })
+
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+
+                        alert("Sport selected successfully!");
+
+                        window.location.href =
+                            `assessment.html?sport=${selectedSport}`;
+
+                    } else {
+
+                        alert(data.message || "Unable to select sport.");
+
+                        button.disabled = false;
+                        button.textContent = "Select Sport →";
+
+                    }
+
+                } catch (error) {
+
+                    alert("Unable to connect to server.");
+
+                    console.error(error);
+
+                    button.disabled = false;
+                    button.textContent = "Select Sport →";
+
+                }
+
+            });
+
+        });
+
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            window.location.href = "login.html";
+
+        });
+
+    </script>
+
+</body>
+</html>
